@@ -63,7 +63,7 @@ jobs:
       - name: Terrascan Scan
         uses: accurics/terrascan-action@v1
         with:
+          iac_dir: terraform
           iac_type: terraform
           iac_version: v15
-          non_recursive: true
           verbose: true
