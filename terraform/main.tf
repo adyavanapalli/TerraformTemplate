@@ -44,6 +44,31 @@ resource "azurerm_network_interface" "network_interface" {
   resource_group_name = data.azurerm_resource_group.resource_group.name
 }
 
+resource "azurerm_network_security_group" "network_security_group" {
+  location            = data.azurerm_resource_group.resource_group.location
+  name                = "nsg-${local.common_resource_suffix}"
+  resource_group_name = data.azurerm_resource_group.resource_group.name
+}
+
+resource "azurerm_network_security_rule" "network_security_rule" {
+  access                      = "Deny"
+  destination_address_prefix  = "*"
+  destination_port_range      = "*"
+  direction                   = "Inbound"
+  name                        = "nsr-${local.common_resource_suffix}"
+  network_security_group_name = azurerm_network_security_group.network_security_group.name
+  priority                    = "100"
+  protocol                    = "*"
+  resource_group_name         = data.azurerm_resource_group.resource_group.name
+  source_address_prefix       = "*"
+  source_port_range           = "*"
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet_network_security_group_association" {
+  subnet_id                 = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.network_security_group.id
+}
+
 data "azurerm_platform_image" "platform_image" {
   offer     = "0001-com-ubuntu-server-hirsute"
   location  = data.azurerm_resource_group.resource_group.location
