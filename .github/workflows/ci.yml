@@ -64,7 +64,5 @@ jobs:
         uses: accurics/terrascan-action@v1
         with:
           iac_type: terraform
-          iac_version: v14
-          only_warn: true
-          policy_type: azure
+          iac_version: v15
           verbose: true
