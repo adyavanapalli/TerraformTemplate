@@ -56,10 +56,11 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
     public_key = var.public_key
     username   = var.username
   }
-  admin_username        = var.username
-  location              = data.azurerm_resource_group.resource_group.location
-  name                  = "vm-${local.common_resource_suffix}"
-  network_interface_ids = [azurerm_network_interface.network_interface.id]
+  admin_username             = var.username
+  allow_extension_operations = false
+  location                   = data.azurerm_resource_group.resource_group.location
+  name                       = "vm-${local.common_resource_suffix}"
+  network_interface_ids      = [azurerm_network_interface.network_interface.id]
   os_disk {
     caching              = "None"
     name                 = "osdisk-${local.common_resource_suffix}"
