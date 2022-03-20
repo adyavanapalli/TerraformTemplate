@@ -85,7 +85,6 @@ jobs:
           set -o posix
           set -o xtrace
 
-          export GO111MODULE=on
           which go
           go version
           go env GOPATH
