@@ -65,5 +65,6 @@ jobs:
         with:
           iac_type: terraform
           iac_version: v14
+          only_warn: true
           policy_type: azure
           verbose: true
