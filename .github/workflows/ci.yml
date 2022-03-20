@@ -25,6 +25,11 @@ on:
 
 jobs:
   terraform:
+    needs:
+      - checkov-scan
+      - terrascan-scan
+      - tfsec-scan
+
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -48,7 +53,12 @@ jobs:
       run: terraform plan -out plan
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main'
+      if: |
+        github.ref == 'refs/heads/main' &&
+        needs.checkov-scan.result == 'success' &&
+        needs.terrascan-scan.result == 'success' &&
+        needs.tfsec-scan.result == 'success'
+
       run: terraform apply -auto-approve "plan"
 
   checkov-scan:
