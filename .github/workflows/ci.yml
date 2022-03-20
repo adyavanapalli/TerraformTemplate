@@ -1,5 +1,9 @@
 name: CI
 
+defaults:
+  run:
+    working-directory: terraform
+
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -21,10 +25,6 @@ on:
 
 jobs:
   terraform:
-    defaults:
-      run:
-        working-directory: terraform
-
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -77,6 +77,9 @@ jobs:
   tfsec-scan:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Setup Go Environment
         uses: actions/setup-go@v3.0.0
         with:
@@ -87,4 +90,4 @@ jobs:
         run: |
           go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
 
-          pwd && ls -alR
+          tfsec
