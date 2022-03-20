@@ -86,6 +86,8 @@ jobs:
           set -o xtrace
 
           which go
+          go version
+
           go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
 
           tfsec .
