@@ -89,3 +89,4 @@ jobs:
 
           pwd && ls -al
           tfsec .
+        working-directory: terraform
