@@ -65,5 +65,5 @@ jobs:
         with:
           iac_dir: terraform
           iac_type: terraform
-          iac_version: v15
+          iac_version: v14
           verbose: true
