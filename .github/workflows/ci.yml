@@ -65,4 +65,5 @@ jobs:
         with:
           iac_type: terraform
           iac_version: v15
+          non_recursive: true
           verbose: true
