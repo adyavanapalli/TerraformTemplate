@@ -88,6 +88,7 @@ jobs:
           which go
           go version
           go env GOPATH
+          echo "$GO111MODULE"
 
           go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
 
