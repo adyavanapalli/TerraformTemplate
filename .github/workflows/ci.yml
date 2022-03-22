@@ -22,6 +22,8 @@ jobs:
         uses: bridgecrewio/checkov-action@master
 
   terrascan-scan:
+    # TODO: terrascan always fails due to not supporting the `terraform.cloud`
+    # block just yet.
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
