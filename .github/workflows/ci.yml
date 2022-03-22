@@ -21,21 +21,21 @@ jobs:
       - name: Checkov Scan
         uses: bridgecrewio/checkov-action@master
 
-  terrascan-scan:
-    # TODO: terrascan always fails due to not supporting the `terraform.cloud`
-    # block just yet.
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  # TODO: terrascan always fails due to not supporting the `terraform.cloud`
+  # block just yet.
 
-      - name: Terrascan Scan
-        uses: accurics/terrascan-action@v1
-        with:
-          iac_type: terraform
-          iac_version: v15
-          verbose: true
+  # terrascan-scan:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Terrascan Scan
+  #       uses: accurics/terrascan-action@v1
+  #       with:
+  #         iac_type: terraform
+  #         iac_version: v15
+  #         verbose: true
 
   tfsec-scan:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
 
     needs:
       - checkov-scan
-      - terrascan-scan
+      # - terrascan-scan
       - tfsec-scan
 
     runs-on: ubuntu-latest
