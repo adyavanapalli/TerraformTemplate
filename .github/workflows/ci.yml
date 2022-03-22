@@ -4,14 +4,6 @@ defaults:
   run:
     working-directory: terraform
 
-env:
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-  ARM_USE_AZUREAD: true
-  TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
-
 on:
   push:
     branches: [ main ]
@@ -30,6 +22,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
 
   terrascan-scan:
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,9 +31,8 @@ jobs:
       - name: Terrascan Scan
         uses: accurics/terrascan-action@v1
         with:
-          iac_dir: terraform
           iac_type: terraform
-          iac_version: v14
+          iac_version: v15
           verbose: true
 
   tfsec-scan:
@@ -62,6 +54,15 @@ jobs:
           tfsec
 
   terraform:
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_USE_AZUREAD: true
+      TF_CLI_CONFIG_FILE: .terraformrc
+      TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
+
     needs:
       - checkov-scan
       - terrascan-scan
@@ -77,8 +78,6 @@ jobs:
 
     - name: Setup Terraform Credentials
       run: |
-        export TF_CLI_CONFIG_FILE="$PWD/.terraformrc"
-
         cat << EOF > "$TF_CLI_CONFIG_FILE"
         credentials "app.terraform.io" {
           token = "$TF_API_TOKEN"
