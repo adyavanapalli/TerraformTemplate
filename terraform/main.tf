@@ -1,5 +1,10 @@
 terraform {
-  backend "azurerm" {}
+  cloud {
+    organization = "adyavanapalli"
+    workspaces {
+      name = "TerraformTemplate"
+    }
+  }
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
