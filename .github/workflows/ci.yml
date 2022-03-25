@@ -2,75 +2,76 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   workflow_dispatch:
 
 jobs:
-  # checkov-scan:
+  checkov-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Checkov Scan
+        uses: bridgecrewio/checkov-action@master
+
+  # TODO: terrascan always fails due to not supporting the `terraform.cloud`
+  # block just yet.
+
+  # terrascan-scan:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout
   #       uses: actions/checkout@v3
 
-  #     - name: Checkov Scan
-  #       uses: bridgecrewio/checkov-action@master
-
-  # # TODO: terrascan always fails due to not supporting the `terraform.cloud`
-  # # block just yet.
-
-  # # terrascan-scan:
-  # #   runs-on: ubuntu-latest
-  # #   steps:
-  # #     - name: Checkout
-  # #       uses: actions/checkout@v3
-
-  # #     - name: Terrascan Scan
-  # #       uses: accurics/terrascan-action@v1
-  # #       with:
-  # #         iac_type: terraform
-  # #         iac_version: v15
-  # #         verbose: true
-
-  # tfsec-scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Go Environment
-  #       uses: actions/setup-go@v3.0.0
+  #     - name: Terrascan Scan
+  #       uses: accurics/terrascan-action@v1
   #       with:
-  #         go-version: 1.18
-  #         check-latest: true
+  #         iac_type: terraform
+  #         iac_version: v15
+  #         verbose: true
 
-  #     - name: Install TFSec
-  #       run: go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+  tfsec-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: TFSec Scan
-  #       run: tfsec
+      - name: Setup Go Environment
+        uses: actions/setup-go@v3.0.0
+        with:
+          go-version: 1.18
+          check-latest: true
+
+      - name: Install TFSec
+        run: go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+
+      - name: TFSec Scan
+        run: tfsec
 
   terraform:
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      ARM_USE_AZUREAD: true
-      TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
-
-    # needs:
-    #   - checkov-scan
-    #   # - terrascan-scan
-    #   - tfsec-scan
+    needs:
+      - checkov-scan
+      # - terrascan-scan
+      - tfsec-scan
 
     runs-on: ubuntu-latest
     steps:
-    - name: Terraform
-      uses: adyavanapalli/terraform-action@main
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        terraform_directory: terraform
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
+        uses: adyavanapalli/terraform-action@main
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_directory: terraform
