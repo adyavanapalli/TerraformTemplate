@@ -56,6 +56,10 @@ jobs:
         run: tfsec
 
   terraform:
+    defaults:
+      run:
+        working-directory: terraform
+
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -75,6 +79,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - run: pwd && ls -al
+
     - name: Terraform
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -84,4 +90,3 @@ jobs:
       uses: adyavanapalli/terraform-action@main
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      working-directory: terraform
