@@ -62,10 +62,6 @@ jobs:
       ARM_USE_AZUREAD: true
       TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
 
-    defaults:
-      run:
-        working-directory: terraform
-
     # needs:
     #   - checkov-scan
     #   # - terrascan-scan
@@ -77,3 +73,4 @@ jobs:
       uses: adyavanapalli/terraform-action@main
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        terraform_directory: terraform
