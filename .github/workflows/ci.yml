@@ -64,10 +64,10 @@ jobs:
       run:
         working-directory: terraform
 
-    needs:
-      - checkov-scan
-      # - terrascan-scan
-      - tfsec-scan
+    # needs:
+    #   - checkov-scan
+    #   # - terrascan-scan
+    #   - tfsec-scan
 
     runs-on: ubuntu-latest
     steps:
