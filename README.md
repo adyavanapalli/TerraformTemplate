@@ -1,6 +1,6 @@
 # Terraform Template
 
-[![CI](https://github.com/adyavanapalli/TerraformTemplate/actions/workflows/ci.yml/badge.svg)](https://github.com/adyavanapalli/TerraformTemplate/actions/workflows/ci.yml)
+[![CI](https://github.com/adyavanapalli/TerraformTemplate/actions/workflows/ci.yaml/badge.svg)](https://github.com/adyavanapalli/TerraformTemplate/actions/workflows/ci.yaml)
 
 This repository functions as a template for a repository containing a typical
 Terraform configuration.
